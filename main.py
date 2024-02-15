@@ -1,10 +1,13 @@
 import tkinter as tk
+from tkinter import PhotoImage
 from pygame import mixer
+from PIL import Image, ImageTk
 
 class BotoneraApp:
     def __init__(self, root):
         self.root = root
         self.root.title("Botonera con Sonidos")
+        self.root.geometry("600x600")  # Ancho x Alto 
 
         # Inicializar Pygame
         mixer.init()
@@ -28,7 +31,18 @@ class BotoneraApp:
             'Vayan a estudiar': r'recursos\vayan_a_estudiar.mp3'
             
         }
+        self.imagenes = {
+            'fondo' : r'recursos\mr_r0bot.png'
+        }        
 
+        # Crear una imagen de fondo
+        self.imagen_fondo = PhotoImage(file=self.imagenes['fondo'])
+        
+        # Configurar un label para mostrar la imagen de fondo
+        self.label_fondo = tk.Label(root, image=self.imagen_fondo)
+        self.label_fondo.place(x=0, y=0, relwidth=1, relheight=1)  # Posicionar el label en toda la ventana
+    	
+        self.botones_creados = []
         self.crear_botones()
 
     def reproducir_sonido(self, sonido):
@@ -38,8 +52,12 @@ class BotoneraApp:
     def crear_botones(self):
         # Crear botones dinámicamente
         for sonido in self.sonidos.keys():
-            btn = tk.Button(self.root, text=sonido, command=lambda s=sonido: self.reproducir_sonido(s))
-            btn.pack(pady=10)
+            if sonido not in self.botones_creados:  # Verificar si el botón ya ha sido creado
+                btn = tk.Button(self.root, text=sonido, command=lambda s=sonido: self.reproducir_sonido(s))
+                btn.pack(pady=10)  # Utilizar fill='x' para que los botones se expandan horizontalmente
+                self.botones_creados.append(sonido)  # Agregar el sonido a la lista de botones creados
+
+
 
 if __name__ == "__main__":
     root = tk.Tk()
